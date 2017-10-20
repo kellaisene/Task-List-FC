@@ -20,6 +20,10 @@ export default class Task extends Component {
         Meteor.call('tasks.setPrivate', this.props.task._id, ! this.props.task.private);
     }
 
+    toggleUpload() {
+        Meteor.call('tasks.upload', this.props.task._id, ! this.props.task.upload);
+    }
+
       render() {
           // Give tasks a different className when they are checked off,
           // so that we can style them nicely in CSS
@@ -46,6 +50,13 @@ export default class Task extends Component {
                 { this.props.task.private ? 'Private' : 'Public' }
                 </button>
             ) : '' }
+            { this.props.showUploadButton ? (
+                <button className="toggle-upload" onClick={this.toggleUpload.bind(this)}>
+                { this.props.task.upload ? 'Upload' : 'upload' }
+                </button>
+            ) : '' }
+
+
             
             <span className="text">
                 <strong>{this.props.task.username}</strong>: {this.props.task.text}
@@ -60,4 +71,5 @@ export default class Task extends Component {
       // We can use propTypes to indicate it is required
       task: PropTypes.object.isRequired,
       showPrivateButton: PropTypes.bool.isRequired,
+      showUploadButton: PropTypes.bool.isRequired,
 };

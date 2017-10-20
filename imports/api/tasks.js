@@ -12,6 +12,7 @@ if (Meteor.isServer) {
             $or: [
                 { private: { $ne: true } },
                 { owner: this.userId },
+                { upload: { $ne: true } },
             ],
         });
     });
@@ -68,5 +69,18 @@ Meteor.methods({
         }
 
         Tasks.update(taskId, { $set: { private: setToPrivate } });
+    },
+    'tasks.upload'(taskId, upload) {
+        check(taskId, String);
+        check(upload, Boolean);
+
+        const task = Tasks.findOne(taskId);
+
+        // Make sure only the task owner can make a task have upload
+        if (task.owner !== Meteor.userId()) {
+            throw new Meteor.Error('not-authorized');
+        }
+
+        Tasks.update(taskId, { $set: {upload: upload } });
     },
 });
