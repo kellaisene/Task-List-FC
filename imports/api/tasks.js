@@ -70,6 +70,8 @@ Meteor.methods({
 
         Tasks.update(taskId, { $set: { private: setToPrivate } });
     },
+
+    // Trying to get an upload button to work 
     'tasks.upload'(taskId, upload) {
         check(taskId, String);
         check(upload, Boolean);
@@ -82,5 +84,38 @@ Meteor.methods({
         }
 
         Tasks.update(taskId, { $set: {upload: upload } });
+    },
+    
+    'tasks.saveUpload'(url) {
+        if (!this.userId) {
+            throw new Meteor.Error("unauthorized", "Unauthorized");
+        }
+
+        const split = url.split("/");
+
+        Uploads.insert({
+            owner: this.userId,
+            url: url,
+            key: split[split.length - 1],
+        });
+    },
+    'tasks.deleteUpload'(id) {
+        if (!this.userId) {
+            throw new Meteor.Error("unauthorized", "Unauthorized");
+        }
+
+        const upload = Uploads.findOne({_id: id, owner: this.userId});
+
+        if (!upload) {
+            throw new Meteor.Error("missing-data", "Upload not found");
+        }
+        // Delete from s3
+        const resp = S3.deleteObjectSync({
+            Bucket: Meteor.settings.S3Bucket,
+            Key: upload.key,
+        });
+
+        // Delete from collection
+        Uploads.remove({_id: id});
     },
 });

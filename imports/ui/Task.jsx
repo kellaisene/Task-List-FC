@@ -20,7 +20,8 @@ export default class Task extends Component {
         Meteor.call('tasks.setPrivate', this.props.task._id, ! this.props.task.private);
     }
 
-    toggleUpload() {
+    // UPLOAD BUTTON
+    upload() {
         Meteor.call('tasks.upload', this.props.task._id, ! this.props.task.upload);
     }
 
@@ -31,6 +32,23 @@ export default class Task extends Component {
               checked: this.props.task.checked,
               private: this.props.task.private,
           });
+
+
+          // Client side uploader
+        //   var uploader = new Slingshot.Upload("myFileUploads");
+          
+        //   uploader.send(document.getElementById('input').files[0], function (error, downloadUrl) {
+        //     if (error) {
+        //       // Log service detailed response
+        //       console.error('Error uploading', uploader.xhr.response);
+        //       alert (error);
+        //     }
+        //     else {
+        //       Meteor.users.update(Meteor.userId(), {$push: {"profile.files": downloadUrl}});
+        //     }
+        //   });
+          
+          
 
         return (
           <li className={taskClassName}>
@@ -50,8 +68,10 @@ export default class Task extends Component {
                 { this.props.task.private ? 'Private' : 'Public' }
                 </button>
             ) : '' }
+
+            {/* UPLOAD BUTTON */}
             { this.props.showUploadButton ? (
-                <button className="toggle-upload" onClick={this.toggleUpload.bind(this)}>
+                <button className="upload" onClick={this.upload.bind(this)}>
                 { this.props.task.upload ? 'Upload' : 'upload' }
                 </button>
             ) : '' }
@@ -71,5 +91,5 @@ export default class Task extends Component {
       // We can use propTypes to indicate it is required
       task: PropTypes.object.isRequired,
       showPrivateButton: PropTypes.bool.isRequired,
-      showUploadButton: PropTypes.bool.isRequired,
+      showUploadButton: PropTypes.bool.isRequired,//SHOW UPLOAD BUTTON
 };
