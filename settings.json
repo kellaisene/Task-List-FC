@@ -1,0 +1,7 @@
+{
+    "galaxy.meteor.com": {
+        "env": {
+            "MONGO_URL": "mongodb://<user>:<password>@ds231715.mlab.com:31715/fundwisetasks"
+        }
+    }
+}
