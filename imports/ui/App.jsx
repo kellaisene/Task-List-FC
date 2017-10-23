@@ -7,7 +7,9 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { Tasks } from '../api/tasks.js';
 
 import Task from './Task.jsx';
+// import Upload from './Upload.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
+
 
 // App component - represents the whole app
 class App extends Component {
@@ -37,6 +39,8 @@ class App extends Component {
         });
       }
 
+    
+
   renderTasks() {
     let filteredTasks = this.props.tasks;
     if (this.state.hideCompleted) {
@@ -54,10 +58,14 @@ class App extends Component {
                 showPrivateButton={showPrivateButton}
                 /* showUploadButton={showUploadButton}//UPLOAD BUTTON */
             />
+            
         );
+       
     });
   }
 
+
+  
   render() {
     return (
       <div className="container">

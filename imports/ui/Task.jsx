@@ -5,6 +5,12 @@ import classnames from 'classnames';
 
 import { Tasks } from '../api/tasks.js';
 
+import FileReaderInput from 'react-file-reader-input';
+
+// import { Upload } from './Upload.jsx';
+
+// var FileInput = require('react-simple-file-input');
+
 // Task component - represents a single todo item
 export default class Task extends Component {
     toggleChecked() {
@@ -24,6 +30,16 @@ export default class Task extends Component {
     // upload() {
     //     Meteor.call('tasks.upload', this.props.task._id, ! this.props.task.upload);
     // }
+
+
+    handleChange = (e, results) => {
+    results.forEach(result => {
+      const [e, file] = result;
+      this.props.dispatch(uploadFile(e.target.result));
+      console.log(`Successfully uploaded ${file.name}!`);
+    });
+  }
+    
 
       render() {
           // Give tasks a different className when they are checked off,
@@ -69,6 +85,15 @@ export default class Task extends Component {
                 </button>
             ) : '' }
 
+            <form>
+                {/* <label htmlFor="my-file-input">Upload a File:</label> */}
+                <FileReaderInput as="binary" id="my-file-input"
+                                onChange={this.handleChange}
+                                >
+                <button checked={this.props.task.checked} onClick={this.toggleChecked.bind(this)}>Upload a file</button>
+                </FileReaderInput>
+            </form>
+
             {/* UPLOAD BUTTON */}
             {/* { this.props.showUploadButton ? (
                 <button className="upload" onClick={this.upload.bind(this)}>
@@ -76,7 +101,22 @@ export default class Task extends Component {
                 </button>
             ) : '' } */}
 
-
+            {/* <FileInput
+            readAs='binary'
+            multiple
+            
+            onLoadStart={ this.showProgressBar }
+            onLoad={ this.handleFileSelected }
+            onProgress={ this.updateProgressBar }
+            
+            cancelIf={ checkIfFileIsIncorrectFiletype }
+            abortIf={ this.cancelButtonClicked }
+            
+            onCancel={ this.showInvalidFileTypeMessage }
+            onAbort={ this.resetCancelButtonClicked }
+            /> */}
+            
+            <br></br>
             
             <span className="text">
                 <strong>{this.props.task.username}</strong>: {this.props.task.text}
