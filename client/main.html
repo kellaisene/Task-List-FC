@@ -5,7 +5,27 @@
 <body>
   <div id="render-target"></div>
   <!-- {{> uploader}} -->
+  {{>fileList}}
 </body>
+
+<template name="fileList">
+  <br/>Testing file upload below<br/><br/>
+<input class="your-upload-class" type="file">
+<br/><br/>
+
+
+<table border="1">
+  <tbody>
+    {{#each theFiles}}
+    <tr>
+      <td>{{uploadedAt}}</td><td>{{original.name}}</td><td><a href="{{url}}">link</a></td><td>{{#if isUploaded}}uploaded{{else}}uploading...{{/if}}</td><td><button id="deleteFileButton">delete</button></td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+</template>
+
+
 
 <!-- <template name="uploader">
   <div class="container">

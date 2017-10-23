@@ -21,9 +21,9 @@ export default class Task extends Component {
     }
 
     // UPLOAD BUTTON
-    upload() {
-        Meteor.call('tasks.upload', this.props.task._id, ! this.props.task.upload);
-    }
+    // upload() {
+    //     Meteor.call('tasks.upload', this.props.task._id, ! this.props.task.upload);
+    // }
 
       render() {
           // Give tasks a different className when they are checked off,
@@ -70,11 +70,11 @@ export default class Task extends Component {
             ) : '' }
 
             {/* UPLOAD BUTTON */}
-            { this.props.showUploadButton ? (
+            {/* { this.props.showUploadButton ? (
                 <button className="upload" onClick={this.upload.bind(this)}>
                 { this.props.task.upload ? 'Upload' : 'upload' }
                 </button>
-            ) : '' }
+            ) : '' } */}
 
 
             
@@ -91,5 +91,5 @@ export default class Task extends Component {
       // We can use propTypes to indicate it is required
       task: PropTypes.object.isRequired,
       showPrivateButton: PropTypes.bool.isRequired,
-      showUploadButton: PropTypes.bool.isRequired,//SHOW UPLOAD BUTTON
+    //   showUploadButton: PropTypes.bool.isRequired,//SHOW UPLOAD BUTTON
 };
