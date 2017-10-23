@@ -32,16 +32,61 @@ export default class Task extends Component {
     // }
 
 
-    handleChange = (e, results) => {
-    results.forEach(result => {
-      const [e, file] = result;
-      this.props.dispatch(uploadFile(e.target.result));
-      console.log(`Successfully uploaded ${file.name}!`);
-    });
-  }
+    handleChange = e => {
+        const files = [];
+        for (let i = 0; i < e.target.files.length; i++) {
+          // Convert to Array.
+          files.push(e.target.files[i]);
+        }
+    
+        // Build Promise List, each promise resolved by FileReader.onload.
+        Promise.all(files.map(file => new Promise((resolve, reject) => {
+          let reader = new FileReader();
+    
+          reader.onload = result => {
+            // Resolve both the FileReader result and its original file.
+            resolve([result, file]);
+          };
+    
+          // Read the file with format based on this.props.as.
+          switch ((this.props.as || 'url').toLowerCase()) {
+            case 'binary': {
+              reader.readAsBinaryString(file);
+              break;
+            }
+            case 'buffer': {
+              reader.readAsArrayBuffer(file);
+              break;
+            }
+            case 'text': {
+              reader.readAsText(file);
+              break;
+            }
+            case 'url': {
+              reader.readAsDataURL(file);
+              break;
+            }
+          }
+        })))
+        .then(zippedResults => {
+          // Run the callback after all files have been read.
+          this.props.onChange(e, zippedResults);
+        });
+      }
+
+      triggerInput = e => {
+        ReactDOM.findDOMNode(this._reactFileReaderInput).click();
+        }
     
 
       render() {
+            const hiddenInputStyle = this.props.children ? {
+            // If user passes in children, display children and hide input.
+            position: 'absolute',
+            top: '-9999px'
+            } : {};
+
+            const {as, style, ...props} = this.props;
           // Give tasks a different className when they are checked off,
           // so that we can style them nicely in CSS
           const taskClassName = classnames({
@@ -86,13 +131,22 @@ export default class Task extends Component {
             ) : '' }
 
             <form>
-                {/* <label htmlFor="my-file-input">Upload a File:</label> */}
+               
                 <FileReaderInput as="binary" id="my-file-input"
                                 onChange={this.handleChange}
                                 >
                 <button checked={this.props.task.checked} onClick={this.toggleChecked.bind(this)}>Upload a file</button>
                 </FileReaderInput>
+                {this.props.children}
             </form>
+
+            {/* <div className="_react-file-reader-input" onClick={this.triggerInput} style={style}>
+                <input {...props} children={undefined} type="file"
+                    onChange={this.handleChange} ref={c => this._reactFileReaderInput = c}
+                    onClick={() => {this._reactFileReaderInput.value = null;}}
+                    style={hiddenInputStyle}/>
+                {this.props.children}
+            </div> */}
 
             {/* UPLOAD BUTTON */}
             {/* { this.props.showUploadButton ? (
