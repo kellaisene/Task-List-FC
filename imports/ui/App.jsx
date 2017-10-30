@@ -11,7 +11,7 @@ import Task from './Task.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
 
-// App component - represents the whole app
+
 class App extends Component {
     constructor(props) {
         super(props);
